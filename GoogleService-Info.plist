@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>61812695874-47cvuiqn07aotntbvdujautsru1qvqhg.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.61812695874-47cvuiqn07aotntbvdujautsru1qvqhg</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDhFKEOfQ2y9x_YX9XLy_gS1j2NtC5X5ng</string>
+	<key>GCM_SENDER_ID</key>
+	<string>61812695874</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>fiveGdeployment.dynamic</string>
+	<key>PROJECT_ID</key>
+	<string>dynamic-deployment</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dynamic-deployment.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:61812695874:ios:3d6ae7c8b2286c2c595edb</string>
+	<key>DATABASE_URL</key>
+	<string>https://dynamic-deployment.firebaseio.com</string>
+</dict>
+</plist>
