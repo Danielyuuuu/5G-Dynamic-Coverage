@@ -27,9 +27,30 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     var ref: DatabaseReference!
     let id = UIDevice.current.identifierForVendor!.uuidString
     
-    @IBOutlet weak var latencyLabel: UILabel!
+    
+    @IBOutlet weak var latency: UILabel!
+    
+    @IBOutlet weak var longitude: UILabel!
+    
+    @IBOutlet weak var latitude: UILabel!
+    
+    @IBOutlet weak var xacc: UILabel!
+    
+    @IBOutlet weak var yacc: UILabel!
+    
+    @IBOutlet weak var zacc: UILabel!
+    
+    @IBOutlet weak var xrot: UILabel!
+    
+    @IBOutlet weak var yrot: UILabel!
+    
+    @IBOutlet weak var zrot: UILabel!
     
     lazy var functions = Functions.functions()
+    
+    @IBOutlet weak var connection: UILabel!
+    
+    @IBOutlet weak var roamButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,8 +87,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 self.pingFirebase(motionDict: motionDict, networks:networks)
         })
         
-        RunLoop.current.add(self.timer!, forMode: .common)
-        
     }
     
     func getNetworkInfo() -> [Dictionary<String,String>] {
@@ -84,12 +103,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             if networkString == CTRadioAccessTechnologyLTE{
                 dict["type"] = "4G"
+                if sim == "0000000100000001" {
+                    connection.text = "4G"
+                }
             } else if networkString == CTRadioAccessTechnologyWCDMA{
                 dict["type"] = "3G"
+                if sim == "0000000100000001" {
+                    connection.text = "3G"
+                }
             } else if networkString == CTRadioAccessTechnologyEdge{
                 dict["type"] = "2G"
+                if sim == "0000000100000001" {
+                    connection.text = "2G"
+                }
             } else {
                 dict["type"] = "unknow"
+                if sim == "0000000100000001" {
+                    connection.text = "/"
+                }
             }
             
             networks.append(dict as! [String : String])
@@ -104,12 +135,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             dict["x_accel"] = data.acceleration.x
             dict["y_accel"] = data.acceleration.y
             dict["z_accel"] = data.acceleration.z
+            xacc.text = String(format: "%.2f", data.acceleration.x)
+            yacc.text = String(format: "%.2f", data.acceleration.y)
+            zacc.text = String(format: "%.2f", data.acceleration.z)
         }
         
         if let data = self.motion.gyroData {
            dict["x_rot"] = data.rotationRate.x
            dict["y_rot"] = data.rotationRate.y
            dict["z_rot"] = data.rotationRate.z
+           xrot.text = String(format: "%.2f", data.rotationRate.x)
+           yrot.text = String(format: "%.2f", data.rotationRate.y)
+           zrot.text = String(format: "%.2f", data.rotationRate.z)
         }
         
         if let data = self.motion.magnetometerData {
@@ -141,14 +178,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
           }
             if ((result?.data as? [String: Any])?["result"] as? String) != nil {
             let elpased = timer.stop()
-            
-            self.latencyLabel.text = String(elpased)
+                self.latency.text = String(format: "%.2f", elpased)
             
             if
                CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedWhenInUse ||
                CLLocationManager.authorizationStatus() ==  CLAuthorizationStatus.authorizedAlways
             {
                 currentLocation = self.locman.location
+                self.longitude.text = String(format: "%.2f", currentLocation.coordinate.longitude)
+                self.latitude.text = String(format: "%.2f", currentLocation.coordinate.latitude)
             self.ref.child("usrData").child(dateString).child(self.id).setValue(["longitude": currentLocation.coordinate.longitude, "latitude": currentLocation.coordinate.latitude, "latency": elpased]) {
             
                     (error:Error?, ref:DatabaseReference) in
@@ -179,9 +217,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
           }
         }
     }
-
-    @IBAction func dealTapped(_ sender: Any) {
-        
+    
+    @IBAction func roam(_ sender: Any) {
+        if roamButton.currentTitle != "Stop" {
+            self.timer = Timer(fire: Date(), interval: (hz),
+                  repeats: true, block: { (timer) in
+                    let motionDict = self.updateMotionData()
+                    let networks = self.getNetworkInfo()
+                    self.pingFirebase(motionDict: motionDict, networks:networks)
+            })
+            RunLoop.current.add(self.timer!, forMode: .common)
+            roamButton.setTitle("Stop", for: .normal)
+        } else {
+            self.timer.invalidate()
+            roamButton.setTitle("Roam Now", for: .normal)
+        }
     }
+    
 }
 
