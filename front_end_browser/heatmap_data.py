@@ -1,26 +1,129 @@
-from flask import Flask, request, Response, render_template
-import json
-import logging
+<!DOCTYPE html>
+<html>
 
-app = Flask(__name__)
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="10">
+    <title>5G Coverage Dynamics</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      #floating-panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        left: 25%;
+        padding: 5px;
+        position: absolute;
+        top: 10px;
+        z-index: 5;
+      }
+    </style>
+  </head>
 
-@app.route('/')
-def home():
+  <body>
+    <div id="floating-panel">
+      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+      <button onclick="changeGradient()">Change gradient</button>
+      <button onclick="changeRadius()">Change radius</button>
+      <button onclick="changeOpacity()">Change opacity</button>
+    </div>
+    <div id="map"></div>
 
-    # Heatmap data: 500 Points
-    def getPoints():
-        return {
-          1: [37.8726, -122.2607],
-          2: [37.8692, -122.2597],
-          3: [37.8703, -122.2581],
-          4: [37.8752, -122.2615],
-          5: [37.8756, -122.2588],
-          6: [37.8753, -122.256],
-          7: [37.871716, -122.264999],
+    <script>
+      var map, heatmap;
+
+      var a = getData();
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 13,
+          center: {lat: 37.8719, lng: -122.2585},
+          mapTypeId: 'satellite'
+        });
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: getData(),
+          map: map
+        });
+      }
+
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+
+      function changeGradient() {
+        var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+      }
+
+      function changeRadius() {
+        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+      }
+
+      function changeOpacity() {
+        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+      }
+
+      //get heatmap points
+      function getData() {
+        var temp = [];
+        var temp_data = JSON.parse(' {{ co_data | tojson}} ');
+
+        l = '{{ co_lenth }}'
+
+        for (var i = 0; i < l; i++) {
+         // Runs 5 times, with values of step 0 through 4.
+         var t = i+1;
+         if(temp_data[t][2] <=70){
+           temp[i] = new google.maps.LatLng(temp_data[t][0], temp_data[t][1]);
+          }
         }
 
-    data = getPoints()
+        return temp;
 
-    l = len(data.keys())
+      }
+    </script>
 
-    return render_template('heatmap.html', co_data = data, co_lenth = l)
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsaMbdSGc5v_vcnBkxhFKMK7fW8vlX_iw&libraries=visualization&callback=initMap">
+    </script>
+
+  </body>
+</html>
