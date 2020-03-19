@@ -3,6 +3,7 @@
 
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="refresh" content="10">
     <title>5G Coverage Dynamics</title>
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -110,13 +111,17 @@
         for (var i = 0; i < l; i++) {
          // Runs 5 times, with values of step 0 through 4.
          var t = i+1;
-         temp[i] = new google.maps.LatLng(temp_data[t][0], temp_data[t][1]);
+         if(temp_data[t][2] <=70){
+           temp[i] = new google.maps.LatLng(temp_data[t][0], temp_data[t][1]);
+          }
         }
+
         return temp;
 
       }
     </script>
-      <script async defer
+
+    <script async defer
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsaMbdSGc5v_vcnBkxhFKMK7fW8vlX_iw&libraries=visualization&callback=initMap">
     </script>
 
