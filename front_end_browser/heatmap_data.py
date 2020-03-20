@@ -1,3 +1,4 @@
+
 from flask import Flask, request, Response, render_template
 import json
 import logging
@@ -17,14 +18,6 @@ def home():
           4: [37.8752, -122.2615, 100 * random.uniform(0, 1)],
           5: [37.8756, -122.2588, 100 * random.uniform(0, 1)],
           6: [37.8753, -122.256, 100 * random.uniform(0, 1)],
-          7: [37.871716, -122.264999, 100 * random.uniform(0, 1)],
-          8: [37.8704, -122.2661, 100 * random.uniform(0, 1)],
-          9: [37.8762, -122.2611, 100 * random.uniform(0, 1)],
-          10: [37.8710, -122.2554, 100 * random.uniform(0, 1)],
-          11: [37.8723, -122.2545, 100 * random.uniform(0, 1)],
-          12: [37.8707, -122.2508, 100 * random.uniform(0, 1)],
-          13: [37.8686, -122.2628, 100 * random.uniform(0, 1)],
-          14: [37.8677, -122.2643, 100 * random.uniform(0, 1)],
         }
 
     data = getPoints()
