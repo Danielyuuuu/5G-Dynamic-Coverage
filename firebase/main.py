@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 
-cred = credentials.Certificate("../../admin key/dynamic-deployment-firebase-adminsdk-nx8lh-0a96741e77.json")
+cred = credentials.Certificate("../admin key/dynamic-deployment-firebase-adminsdk-nx8lh-0a96741e77.json")
 
 default_app = firebase_admin.initialize_app(cred, {'databaseURL': "https://dynamic-deployment.firebaseio.com/"})
 
