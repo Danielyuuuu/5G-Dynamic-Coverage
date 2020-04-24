@@ -3,3 +3,4 @@
 * **Master** : App side code
 * **Data** : Data related code
 * **Front_end** : Operator server side code
+* **User_trajecotry** : Analytics on user data
